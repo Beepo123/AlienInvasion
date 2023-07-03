@@ -35,6 +35,12 @@ class AlienInvasion:
                 if event.key == pygame.K_RIGHT:
                     # Move ship to right
                     self.ship.rect.x += 1
+                elif event.key == pygame.K_LEFT:
+                    self.ship.rect.x -= 1
+                elif event.key == pygame.K_UP:
+                    self.ship.rect.y -= 1
+                elif event.key == pygame.K_DOWN:
+                    self.ship.rect.y += 1
 
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
