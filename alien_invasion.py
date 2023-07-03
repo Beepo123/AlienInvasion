@@ -2,7 +2,7 @@ import sys
 import pygame
 from settings import Settings
 from ship import Ship
-
+from blimp import Blimp
 
 class AlienInvasion:
     """Overall call to manage game assets and behavior"""
@@ -18,6 +18,7 @@ class AlienInvasion:
         pygame.display.set_caption("Alien Invasion")
         
         self.ship = Ship(self)
+        self.blimp = Blimp(self)
 
     def run_game(self):
         """Start the main loop of the game"""
@@ -34,7 +35,7 @@ class AlienInvasion:
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
         self.ship.blitme()
-
+        self.blimp.blitme()
         pygame.display.flip()
 
 
