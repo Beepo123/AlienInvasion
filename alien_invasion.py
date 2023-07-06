@@ -1,10 +1,11 @@
 import sys
 import pygame
+from random import randint
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
-
+from star import Star
 
 class AlienInvasion:
     """Overall call to manage game assets and behavior"""
@@ -22,7 +23,9 @@ class AlienInvasion:
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
+        self.stars = pygame.sprite.Group()
 
+        self._create_stars()
         self._create_fleet()
 
     def run_game(self):
@@ -111,12 +114,20 @@ class AlienInvasion:
         alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
         self.aliens.add(alien)
 
+    def _create_stars(self):
+        for number_star in range(self.settings.max_stars):
+            star = Star(self)
+            star.rect.x = randint(0, self.settings.screen_w)
+            star.rect.y = randint(0, self.settings.screen_h // 2)
+            self.stars.add(star)
+
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
+        self.stars.draw(self.screen)
 
         pygame.display.flip()
 
