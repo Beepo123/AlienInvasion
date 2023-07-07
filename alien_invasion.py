@@ -106,7 +106,8 @@ class AlienInvasion:
         # Check for bullets that have hit aliens.
         # if so get rid of bullet and alien
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
-        
+        self.settings.high_score = len(collisions)
+
         if not self.aliens:
             # Destroy existing bullets and create new fleet
             self.bullets.empty()
@@ -210,9 +211,12 @@ class AlienInvasion:
 
         pygame.display.flip()
 
+    def get_score(self):
+        return self.settings.high_score
+
 
 if __name__ == "__main__":
     # make game instance and run game
     ai = AlienInvasion()
     ai.run_game()
-    print(f"Game over! you lost")
+    print(f"Game over! you lost. Your score is {ai.get_score()}")
