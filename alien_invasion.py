@@ -7,6 +7,7 @@ from bullet import Bullet
 from alien import Alien
 from star import Star
 
+
 class AlienInvasion:
     """Overall call to manage game assets and behavior"""
 
@@ -78,7 +79,7 @@ class AlienInvasion:
             self.bullets.add(new_bullet)
 
     def _update_bullets(self):
-        """Update the position of bullets and remove old bullets."""
+        """Update the position of bullets and get rid of old bullets."""
         # Update bullet positions
         self.bullets.update()
 
@@ -86,6 +87,12 @@ class AlienInvasion:
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
+
+        # Check for bullets that have hit aliens.
+        # if so get rid of bullet and alien
+        collisions = pygame.sprite.groupcollide(self.bullets, 
+                                                self.aliens, True, True)
+
 
     def _create_fleet(self):
         """Create the fleet of aliens"""
@@ -98,8 +105,7 @@ class AlienInvasion:
 
         # Determine the number of rows of alien that fit on the screen
         ship_height = self.ship.rect.height
-        available_space_y = (self.settings.screen_h - 
-                                (3 * alien_height) - ship_height)
+        available_space_y = self.settings.screen_h - (3 * alien_height) - ship_height
         number_rows = available_space_y // (2 * alien_height)
 
         # Create full fleet of alien
@@ -145,7 +151,7 @@ class AlienInvasion:
 
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
-        self.ship.blitme()  
+        self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
