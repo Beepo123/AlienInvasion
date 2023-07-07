@@ -1,1 +1,1 @@
-ship.center_ship()
+setting

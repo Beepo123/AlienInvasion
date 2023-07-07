@@ -28,3 +28,6 @@ class Settings:
 
         # Star setting
         self.max_stars = 100
+
+        # Scoring
+        self.high_score = 0
