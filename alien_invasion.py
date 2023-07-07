@@ -34,6 +34,7 @@ class AlienInvasion:
             self._check_events()
             self.ship.update()
             self._update_bullets()
+            self._update_aliens()
             self._update_screen()
 
     def _check_events(self):
@@ -114,6 +115,19 @@ class AlienInvasion:
         alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
         self.aliens.add(alien)
 
+    def _check_fleet_edges(self):
+        """Respond if any aliens reached the edge of screen"""
+        for alien in self.aliens.sprites():
+            if alien.check_edges():
+                self._change_fleet_direction()
+                break
+
+    def _change_fleet_direction(self):
+        """Drop entire fleet and change fleet direction"""
+        for alien in self.aliens.sprites():
+            alien.rect.y += self.settings.fleet_drop_speed
+        self.settings.fleet_direction *= -1
+
     def _create_stars(self):
         for number_star in range(self.settings.max_stars):
             star = Star(self)
@@ -121,9 +135,17 @@ class AlienInvasion:
             star.rect.y = randint(0, self.settings.screen_h // 2)
             self.stars.add(star)
 
+    def _update_aliens(self):
+        """
+        fleet_direction of 1 represents right; -1 represents left.
+            self.fleet_direction = 1
+        """
+        self._check_fleet_edges()
+        self.aliens.update()
+
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
-        self.ship.blitme()
+        self.ship.blitme()  
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
