@@ -93,6 +93,10 @@ class AlienInvasion:
         collisions = pygame.sprite.groupcollide(self.bullets, 
                                                 self.aliens, True, True)
 
+        if not self.aliens:
+            # Destroy existing bullets and create new fleet
+            self.bullets.empty()
+            self._create_fleet()
 
     def _create_fleet(self):
         """Create the fleet of aliens"""
@@ -106,7 +110,7 @@ class AlienInvasion:
         # Determine the number of rows of alien that fit on the screen
         ship_height = self.ship.rect.height
         available_space_y = self.settings.screen_h - (3 * alien_height) - ship_height
-        number_rows = available_space_y // (2 * alien_height)
+        number_rows = (available_space_y // (2 * alien_height)) // 2
 
         # Create full fleet of alien
         for row_number in range(number_rows):
