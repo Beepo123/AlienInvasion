@@ -1,11 +1,15 @@
 import sys
+from time import sleep
+
 import pygame
 from random import randint
+
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
 from star import Star
+from game_stats import GameStats
 
 
 class AlienInvasion:
@@ -13,14 +17,18 @@ class AlienInvasion:
 
     def __init__(self):
         """Initialize the game and create game resources"""
+        # Initialize game window
         pygame.init()
         self.settings = Settings()
-
         self.screen = pygame.display.set_mode(
             (self.settings.screen_w, self.settings.screen_h)
         )
         pygame.display.set_caption("Alien Invasion")
 
+        # Create an instance to store game statistics.
+        self.stats = GameStats(self)
+
+        # Create game resourices
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
@@ -88,10 +96,12 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
+        self._check_bullet_alien_collisions()
+
+    def _check_bullet_alien_collisions(self):
         # Check for bullets that have hit aliens.
         # if so get rid of bullet and alien
-        collisions = pygame.sprite.groupcollide(self.bullets, 
-                                                self.aliens, True, True)
+        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
 
         if not self.aliens:
             # Destroy existing bullets and create new fleet
@@ -152,6 +162,25 @@ class AlienInvasion:
         """
         self._check_fleet_edges()
         self.aliens.update()
+
+        # Look for alien-ship collisions.
+        if pygame.sprite.spritecollideany(self.ship, self.aliens):
+            self._ship_hit()
+
+    def _ship_hit(self):
+        # Decrement ship left
+        self.stats.ships_left -= 1
+
+        # Get rid of any remaining aliens and bullets
+        self.bullets.empty()
+        self.aliens.empty()
+
+        # pause game
+        sleep(0.5)
+
+        # Create new fleet and center ship
+        self._create_fleet()
+        self.ship.center_ship()
 
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)

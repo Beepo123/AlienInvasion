@@ -28,6 +28,13 @@ class Ship:
         self.moving_left = False
         self.moving_up = False
         self.moving_down = False
+    
+    def center_ship(self):
+        self.rect.midbottom = self.screen_rect.midbottom
+
+        # Store a decimal value for ship's position
+        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
         
     def update(self):
         """Update ship position based on movement flags"""
