@@ -167,10 +167,13 @@ class AlienInvasion:
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             self._ship_hit()
 
+        # Look for aliens hitting the bottom of the screen
+        self._check_aliens_bottom()
+
     def _ship_hit(self):
         # Decrement ship left
         self.stats.ships_left -= 1
-
+        
         # Get rid of any remaining aliens and bullets
         self.bullets.empty()
         self.aliens.empty()
@@ -181,6 +184,13 @@ class AlienInvasion:
         # Create new fleet and center ship
         self._create_fleet()
         self.ship.center_ship()
+
+    def _check_aliens_bottom(self):
+        screen_rect = self.screen.get_rect()
+        for alien in self.aliens.sprites():
+            if alien.rect.bottom >= screen_rect.bottom:
+                self._ship_hit()
+                break
 
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
@@ -197,3 +207,4 @@ if __name__ == "__main__":
     # make game instance and run game
     ai = AlienInvasion()
     ai.run_game()
+    print(f"Game over! you lost")
