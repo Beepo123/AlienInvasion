@@ -27,6 +27,7 @@ class AlienInvasion:
 
         # Create an instance to store game statistics.
         self.stats = GameStats(self)
+        self.game_active = True
 
         # Create game resourices
         self.ship = Ship(self)
@@ -41,9 +42,12 @@ class AlienInvasion:
         """Start the main loop of the game"""
         while True:
             self._check_events()
-            self.ship.update()
-            self._update_bullets()
-            self._update_aliens()
+
+            if self.game_active:
+                self.ship.update()
+                self._update_bullets()
+                self._update_aliens()
+
             self._update_screen()
 
     def _check_events(self):
@@ -102,11 +106,13 @@ class AlienInvasion:
         # Check for bullets that have hit aliens.
         # if so get rid of bullet and alien
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
-
+        
         if not self.aliens:
             # Destroy existing bullets and create new fleet
             self.bullets.empty()
             self._create_fleet()
+            self.settings.alien_speed += 0.5
+            self.settings.fleet_drop_speed += 5
 
     def _create_fleet(self):
         """Create the fleet of aliens"""
@@ -173,17 +179,19 @@ class AlienInvasion:
     def _ship_hit(self):
         # Decrement ship left
         self.stats.ships_left -= 1
-        
-        # Get rid of any remaining aliens and bullets
-        self.bullets.empty()
-        self.aliens.empty()
+        if self.stats.ships_left > 0:
+            # Get rid of any remaining aliens and bullets
+            self.bullets.empty()
+            self.aliens.empty()
 
-        # pause game
-        sleep(0.5)
+            # pause game
+            sleep(0.5)
 
-        # Create new fleet and center ship
-        self._create_fleet()
-        self.ship.center_ship()
+            # Create new fleet and center ship
+            self._create_fleet()
+            self.ship.center_ship()
+        else:
+            self.game_active = False
 
     def _check_aliens_bottom(self):
         screen_rect = self.screen.get_rect()
