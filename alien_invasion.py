@@ -28,7 +28,6 @@ class AlienInvasion:
 
         # Create an instance to store game statistics.
         self.stats = GameStats(self)
-        self.game_active = False
 
         # Create game resourices
         self.ship = Ship(self)
@@ -47,7 +46,7 @@ class AlienInvasion:
         while True:
             self._check_events()
 
-            if self.game_active:
+            if self.stats.game_active:
                 self.ship.update()
                 self._update_bullets()
                 self._update_aliens()
@@ -184,6 +183,13 @@ class AlienInvasion:
         # Look for aliens hitting the bottom of the screen
         self._check_aliens_bottom()
 
+    def _check_aliens_bottom(self):
+        screen_rect = self.screen.get_rect()
+        for alien in self.aliens.sprites():
+            if alien.rect.bottom >= screen_rect.bottom:
+                self._ship_hit()
+                break
+
     def _ship_hit(self):
         # Decrement ship left
         self.stats.ships_left -= 1
@@ -199,17 +205,12 @@ class AlienInvasion:
             self._create_fleet()
             self.ship.center_ship()
         else:
-            self.game_active = False
+            self.stats.game_active = False
 
-    def _check_aliens_bottom(self):
-        screen_rect = self.screen.get_rect()
-        for alien in self.aliens.sprites():
-            if alien.rect.bottom >= screen_rect.bottom:
-                self._ship_hit()
-                break
-
-    def _check_play_button(self):
-        pass
+    def _check_play_button(self, mouse_pos):
+        """Start a new game when player clicks Play."""
+        if self.play_button.rect.collidepoint(mouse_pos):
+            self.stats.game_active = True
 
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
@@ -220,7 +221,7 @@ class AlienInvasion:
         self.aliens.draw(self.screen)
 
         # Draw the play button if game is inactive
-        if not self.game_active:
+        if not self.stats.game_active:
             self.play_button.draw_button()
 
         pygame.display.flip()
