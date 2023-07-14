@@ -11,23 +11,24 @@ from alien import Alien
 from star import Star
 from game_stats import GameStats
 from button import Button
-
+from scoreboard import Scoreboard
 
 class AlienInvasion:
     """Overall call to manage game assets and behavior"""
 
     def __init__(self):
         """Initialize the game and create game resources"""
-        # Initialize game window
+        # Initialize game window and game attributes
         pygame.init()
-        self.settings = Settings()
         self.screen = pygame.display.set_mode(
             (self.settings.screen_w, self.settings.screen_h)
         )
         pygame.display.set_caption("Alien Invasion")
 
-        # Create an instance to store game statistics.
+        # Initialize game atrributes
+        self.settings = Settings()
         self.stats = GameStats(self)
+        self.score = Scoreboard(self)
 
         # Create game resourices
         self.ship = Ship(self)
