@@ -78,12 +78,10 @@ class Scoreboard():
         self.ships.draw(self.screen)
 
     def check_high_score(self):
-        """Check to see if theres a new high score."""
+        """Check to see if theres a new high score and write it to file."""
         if self.stats.score > self.stats.high_score:
             self.stats.high_score = self.stats.score
-<<<<<<< HEAD
             with open("scores.txt",'w') as file:
                 file.write(str(self.stats.high_score))
-=======
->>>>>>> 537b9485722e80d9a489e127721ccab1086251b6
             self.prep_high_score()
+        
