@@ -81,6 +81,9 @@ class Scoreboard():
         """Check to see if theres a new high score."""
         if self.stats.score > self.stats.high_score:
             self.stats.high_score = self.stats.score
+<<<<<<< HEAD
             with open("scores.txt",'w') as file:
                 file.write(str(self.stats.high_score))
+=======
+>>>>>>> 537b9485722e80d9a489e127721ccab1086251b6
             self.prep_high_score()
