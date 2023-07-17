@@ -1,1 +1,1 @@
-prep_score
+_start_game

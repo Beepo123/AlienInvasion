@@ -79,6 +79,8 @@ class AlienInvasion:
         elif event.key == pygame.K_q:
             sys.exit()
         elif event.key == pygame.K_SPACE:
+            if self.stats.game_active == False:
+                self._start_game()
             self._fire_bullet()
         elif event.key == pygame.K_p and self.stats.game_active == False:
             self._start_game()
