@@ -3,8 +3,14 @@ class GameStats:
 
     def __init__(self, ai_game):
         # Read high score from score file
-        with open("scores.txt", 'r') as file:
-            self.high_score = int(file.read())
+        try:
+            with open("scores.txt", 'r') as file:
+                self.high_score = int(file.read())
+        except FileNotFoundError:
+            with open("scores.txt",'w') as file:
+                file.write("0")
+                self.high_score = 0
+
         self.settings = ai_game.settings
         self.game_active = False
         self.reset_stats()
